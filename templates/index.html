@@ -22,9 +22,10 @@
         <p>To use a different audio file, simply choose and upload a new file.</p>
     </div>
 
-
-    <input type="file" id="audioFile" name="file">
-    <button onclick="uploadFile()" id="uploadFile">Upload File</button>
+    <form method = "/upload" action="'/" enctype="multipart/form-data">
+        <input type="file" id="audioFile" name="file">
+        <button onclick="uploadFile()" id="uploadFile">Upload File</button>
+    </form>
     <button onclick="summarizeAudio()" id="summarizeButton" style="display:none;">Summarize Audio</button>
     <h2 id="summaryHeading" style="display:none;">Summary:</h2>
     <div id="loader" class="loader" style="display: none; margin: auto;"></div>

@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
+from flask_sqlalchemy import SQLAlchemy
 from flask import send_file, jsonify
 from summarizer import audio_summarizer
 from waitress import serve
