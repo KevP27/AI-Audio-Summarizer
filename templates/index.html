@@ -22,7 +22,7 @@
         <p>To use a different audio file, simply choose and upload a new file.</p>
     </div>
 
-    <form method = "/upload" action="'/" enctype="multipart/form-data">
+    <form method = "POST" action="'/" enctype="multipart/form-data">
         <input type="file" id="audioFile" name="file">
         <button onclick="uploadFile()" id="uploadFile">Upload File</button>
     </form>
