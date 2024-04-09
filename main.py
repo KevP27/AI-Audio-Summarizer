@@ -22,7 +22,8 @@ class File(db.Model):
     filename = db.Column(db.String(120), unique=True, nullable=False)
     path = db.Column(db.String(120), unique=True, nullable=False)
 
-db.create_all()
+with app.app_context():
+    db.create_all()
 
 class uploadFile(FlaskForm):
     file = FileField("File", validators=[InputRequired()])
