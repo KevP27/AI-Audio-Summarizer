@@ -27,8 +27,6 @@ class AudioFile(db.Model):
     filename = db.Column(db.String(100))
     data = db.Column(db.LargeBinary)
 
-db.create_all()
-
 @app.route('/', methods=['GET', 'POST'])
 def index():
     form = uploadFile()
@@ -66,4 +64,5 @@ def answer_question():
         return jsonify({'error': 'No question provided'}), 400
 
 if __name__ == "__main__":
+    db.create_all()
     serve(app, host="0.0.0.0", port=8000)
