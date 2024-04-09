@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Audio Summarizer</title>
+    <link href="{{ url_for('static', filename='styles/style.css')}}" rel="stylesheet" />
+    <style>
+        #questionInput {
+            width: 80%;
+        }
+    </style>
+</head>
+<body>
+    <h1>AI Audio Summarizer</h1>
+
+    <div class="info-box">
+        <p>Welcome to Kevin's AI Audio Summarizer!</p>
+        <p>Choose an audio file and upload it using the buttons below. Click the "Summarize Audio" button (when it appears after uploading) to transcribe the audio into a summarized text.</p>
+        <p>Please be patient while the audio is being summarized. This can take a few minutes based on the length of the audio.</p>
+        <p>You can also ask any follow-up questions about the audio afterwards.</p>
+        <p>To use a different audio file, simply choose and upload a new file.</p>
+    </div>
+
+
+    <input type="file" id="audioFile" name="file">
+    <button onclick="uploadFile()" id="uploadFile">Upload File</button>
+    <button onclick="summarizeAudio()" id="summarizeButton" style="display:none;">Summarize Audio</button>
+    <h2 id="summaryHeading" style="display:none;">Summary:</h2>
+    <div id="loader" class="loader" style="display: none; margin: auto;"></div>
+    <div id="summaryText"></div>
+    <h2 id="answerHeading" style="display:none;">Q&A:</h2>
+    <div id="questionLoader" class="loader" style="display: none; margin: auto;"></div>
+    <div id="answerText"></div>
+
+    <textarea id="questionInput" placeholder="Ask a question about the audio..." style="display:none;" onkeydown="handleKeyPress(event)"></textarea>
+    
+    <script>
+        function uploadFile() {
+            var fileInput = document.getElementById('audioFile');
+            var file = fileInput.files[0];
+            var formData = new FormData();
+            formData.append('file', file);
+
+            fetch('/', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.filename) {
+                    console.log('Upload successful');
+                    document.getElementById('summarizeButton').style.display = 'inline'; 
+                    document.getElementById('summaryHeading').style.display = 'block'; 
+                    document.getElementById('answerHeading').style.display = 'none'; 
+                    document.getElementById('questionInput').style.display = 'none'; 
+                    document.getElementById('summaryText').innerText = ''; 
+                    document.getElementById('answerText').innerText = ''; 
+                    window.filename = data.filename; 
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function summarizeAudio() {
+            var formData = new FormData();
+            formData.append('filename', window.filename);
+
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('summarizeButton').style.display = 'none'; 
+            document.getElementById('uploadFile').style.display = 'none'; 
+            document.getElementById('audioFile').style.display = 'none';
+
+            fetch('/summarize', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('loader').style.display = 'none';
+
+                if(data.summary) {
+                    document.getElementById('audioFile').style.display = 'block';
+                    document.getElementById('uploadFile').style.display = 'inline'; 
+                    document.getElementById('summaryText').innerText = data.summary;
+                    document.getElementById('summaryHeading').style.display = 'block'; 
+                    document.getElementById('answerHeading').style.display = 'block'; 
+                    document.getElementById('questionInput').style.display = 'block'; 
+                    document.getElementById('summarizeButton').style.display = 'none'; 
+                    document.getElementById('questionInput').value = ''; 
+                } else {
+                    document.getElementById('summaryText').innerText = 'Error summarizing audio.';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('loader').style.display = 'none';
+            });
+        }
+
+        function askQuestion() {
+            var question = document.getElementById('questionInput').value.trim();
+            if (question) {
+                document.getElementById('answerText').innerText = '';
+                document.getElementById('questionLoader').style.display = 'block';
+
+                fetch('/answer_question', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ question: question }),
+                })
+                .then(response => response.text())
+                .then(answer => {
+                    document.getElementById('questionLoader').style.display = 'none';
+                    document.getElementById('answerText').innerText = answer;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('questionLoader').style.display = 'none';
+                });
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.keyCode === 13) { 
+                event.preventDefault();
+                askQuestion();
+            }
+        }
+
+    </script>
+    <div class="footer-box"></div>
+        <footer>
+            <p>Developed by Kevin Park, 2024</p>
+        </footer>
+    </div>
+</body>
+</html>
