@@ -78,3 +78,18 @@ footer {
     resize: none;
     font-size: 20px;
 }
+
+#uploadProgress {
+    width: 60%;
+    background-color: #ddd;
+    display: none;
+}
+
+#uploadProgressBar {
+    height: 20px;
+    background-color: #4CAF50;
+    width: 0%; 
+    text-align: center;
+    line-height: 20px;
+    color: white;
+}
