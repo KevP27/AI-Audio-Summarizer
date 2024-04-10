@@ -13,7 +13,7 @@ load_dotenv()
 def audio_summarizer(audio_file):
     #Setting temperature to 0 to have more concrete summarizations
     #llm = ChatOpenAI(temperature=0.1, api_key=os.getenv("OPENAI_API_KEY"))
-    llm = ChatOpenAI(model='gpt-4-0613',temperature=0.1, api_key=os.getenv("OPENAI_API_KEY"))
+    llm = ChatOpenAI(model='gpt-3.5-turbo',temperature=0.1, api_key=os.getenv("OPENAI_API_KEY"))
 
     #Getting the AssemblyAI API key
     aai.settings.api_key = os.getenv("ASSEMBLYAI_API_KEY")
