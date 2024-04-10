@@ -4,7 +4,7 @@
 1. Click "Choose File" and select an audio file from your device
 2. Click "Upload" and wait for the audio to upload
 3. When the "Summarize Audio" button appears, click it to produce a summary of the audio
-4. After the summary displays, you can scroll down to the "Q/A" section to ask questions about the audio using the textbox
+4. After the summary displays, you can scroll down to the "Q/A" section to ask questions about the audio using the textbox and pressing the Enter key
 5. To use another audio file, simply choose and upload another file
 
 ### Design Choices
