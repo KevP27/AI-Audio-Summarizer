@@ -25,6 +25,9 @@
 
     <input type="file" id="audioFile" name="file">
     <button onclick="uploadFile()" id="uploadFile">Upload File</button>
+    <div id="uploadProgress" style="display:none;">
+        <div id="uploadProgressBar" style="width: 0%; height: 20px; background-color: #4CAF50;"></div>
+    </div>
     <button onclick="summarizeAudio()" id="summarizeButton" style="display:none;">Summarize Audio</button>
     <h2 id="summaryHeading" style="display:none;">Summary:</h2>
     <div id="loader" class="loader" style="display: none; margin: auto;"></div>
@@ -41,27 +44,44 @@
             var file = fileInput.files[0];
             var formData = new FormData();
             formData.append('file', file);
+            
+            var xhr = new XMLHttpRequest();
 
-            fetch('/', {
-                method: 'POST',
-                body: formData,
-            })
-            .then(response => response.json())
-            .then(data => {
-                if(data.filename) {
-                    console.log('Upload successful');
-                    document.getElementById('summarizeButton').style.display = 'inline'; 
-                    document.getElementById('summaryHeading').style.display = 'block'; 
-                    document.getElementById('answerHeading').style.display = 'none'; 
-                    document.getElementById('questionInput').style.display = 'none'; 
-                    document.getElementById('summaryText').innerText = ''; 
-                    document.getElementById('answerText').innerText = ''; 
-                    window.filename = data.filename; 
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    try {
+                        var data = JSON.parse(xhr.responseText);
+                        if(data.filename) {
+                            console.log('Upload successful');
+                            document.getElementById('summarizeButton').style.display = 'inline'; 
+                            document.getElementById('summaryHeading').style.display = 'block'; 
+                            document.getElementById('answerHeading').style.display = 'none'; 
+                            document.getElementById('questionInput').style.display = 'none'; 
+                            document.getElementById('summaryText').innerText = ''; 
+                            document.getElementById('answerText').innerText = ''; 
+                            window.filename = data.filename; 
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                    } finally {
+                        document.getElementById('uploadProgress').style.display = 'none';
+                        document.getElementById('uploadProgressBar').style.width = '0%';
+                    }
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+            };
+            
+            xhr.upload.onprogress = function(event) {
+                if (event.lengthComputable) {
+                    var percentComplete = (event.loaded / event.total) * 100;
+                    document.getElementById('uploadProgressBar').style.width = percentComplete + '%';
+                }
+            };
+
+            xhr.open('POST', '/', true);
+            xhr.send(formData);
+
+            document.getElementById('uploadProgress').style.display = 'block';
+            document.getElementById('uploadProgressBar').style.width = '0%';
         }
 
         function summarizeAudio() {
