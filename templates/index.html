@@ -69,7 +69,7 @@
                     }
                 }
             };
-            
+
             xhr.upload.onprogress = function(event) {
                 if (event.lengthComputable) {
                     var percentComplete = (event.loaded / event.total) * 100;
@@ -82,6 +82,9 @@
 
             document.getElementById('uploadProgress').style.display = 'block';
             document.getElementById('uploadProgressBar').style.width = '0%';
+
+            document.getElementById('summarizeButton').style.display = 'none';
+            document.getElementById('summaryHeading').style.display = 'none';
         }
 
         function summarizeAudio() {
