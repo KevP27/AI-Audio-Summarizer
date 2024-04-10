@@ -1,5 +1,5 @@
-from flask import Flask, render_template, request, redirect, url_for
-from flask import send_file, jsonify
+from flask import Flask, render_template, request
+from flask import jsonify
 from summarizer import audio_summarizer
 from waitress import serve
 from flask_wtf import FlaskForm
@@ -54,4 +54,4 @@ def answer_question():
         return jsonify({'error': 'No question provided'}), 400
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8000)
+    serve(app, host="0.0.0.0", port=8000)
