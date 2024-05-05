@@ -54,7 +54,7 @@
                         if(data.filename) {
                             console.log('Upload successful');
                             document.getElementById('summarizeButton').style.display = 'inline'; 
-                            document.getElementById('summaryHeading').style.display = 'block'; 
+                            document.getElementById('summaryHeading').style.display = 'none'; 
                             document.getElementById('answerHeading').style.display = 'none'; 
                             document.getElementById('questionInput').style.display = 'none'; 
                             document.getElementById('summaryText').innerText = ''; 
@@ -97,6 +97,7 @@
 
             document.getElementById('loader').style.display = 'block';
             document.getElementById('summarizeButton').style.display = 'none'; 
+            document.getElementById('summaryHeading').style.display = 'block'; 
             document.getElementById('uploadFile').style.display = 'none'; 
             document.getElementById('audioFile').style.display = 'none';
 
